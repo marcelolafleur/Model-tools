@@ -16,6 +16,7 @@ skills below cross-reference its sections.
 | [`og-solver-diagnosis`](og-solver-diagnosis/SKILL.md) | Root-cause protocol for non-convergent/suspicious SS & TPI solves, with the family's real failure taxonomy | — |
 | [`og-repo-fleet-sync`](og-repo-fleet-sync/SKILL.md) | One change → N country repos: playbook, detection sweep, tracking table, per-repo branches; never pushes unasked | — |
 | [`og-scenario-report`](og-scenario-report/SKILL.md) | OUTPUT_BASELINE/OUTPUT_REFORM → the standard charts+tables+narrative deliverable | `scenario_report.py` |
+| [`og-analysis-studio`](og-analysis-studio/SKILL.md) | On-demand scenario design, free-form exploration, bespoke code-generated visualization and write-ups (not bound to the house formats) | — |
 | [`worktree-orchard`](worktree-orchard/SKILL.md) | Read-only inventory of checkouts/worktrees/backup dirs; merged vs diverged vs dirty; cleanup as printed commands only | `orchard.py` |
 | [`calibration-provenance`](calibration-provenance/SKILL.md) | Trace any parameter back through notebooks/CSVs to its authoritative source; record the chain | — |
 

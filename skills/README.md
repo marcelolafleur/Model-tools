@@ -54,6 +54,8 @@ directory per skill, kept separate from the top-level CLEWS skills:
   change across the country-repo fleet, tracked.
 - [`og/og-scenario-report`](og/og-scenario-report/SKILL.md): baseline-vs-reform
   outputs → standard charts, tables, narrative.
+- [`og/og-analysis-studio`](og/og-analysis-studio/SKILL.md): on-demand scenario
+  design, analytical exploration, bespoke visualization, and write-ups.
 - [`og/worktree-orchard`](og/worktree-orchard/SKILL.md): read-only inventory of
   checkout/worktree sprawl with retirement candidates.
 - [`og/calibration-provenance`](og/calibration-provenance/SKILL.md): trace any
