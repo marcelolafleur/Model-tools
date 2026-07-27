@@ -130,3 +130,13 @@ Only after the class is identified:
 
 Report the diagnosis with the evidence chain: log lines → class → hypothesis → probe result →
 fix → verification run. Separate what you verified from what you assume.
+
+## Cost gate on probes
+
+Log reading, greps, and aggregator-level probes (no solve) are free — do them liberally. Anything
+that *solves* costs real time: a capped-iteration SS probe is borderline (propose it with its
+expected runtime); a full SS, any TPI run, a control/treatment pair, or a multi-country sweep is
+expensive — present the probe plan (which runs, why, expected total time) and get the user's
+explicit approval before launching. Never queue a battery of diagnostic runs on your own, and
+never re-launch a failed run "to see if it happens again" without asking. Skills propose; the
+user launches (see `skills/og/README.md` → Approval gates).

@@ -34,6 +34,10 @@ Example (cross-env ogclews run -- one --check per environment):
 
 Written after a battery silently ran stale code via import shadowing
 (2026-07-07). This script exists so that never recurs.
+
+Trust boundary: the probes execute the target repo's venv python and import the
+package (module-level code runs). That is the same trust decision as running the
+model itself -- only point this at repos/venvs you intend to run anyway.
 """
 
 from __future__ import annotations
@@ -45,6 +49,12 @@ import sys
 import tempfile
 
 GREEN, RED, YELLOW, RESET = "\033[32m", "\033[31m", "\033[33m", "\033[0m"
+
+
+def valid_pkg(name: str) -> bool:
+    """Package names are interpolated into `python -c "import <name>"` — restrict them to
+    (dotted) identifiers so a crafted name can never smuggle code into the probe."""
+    return bool(name) and all(part.isidentifier() for part in name.split("."))
 
 
 def real(p: str) -> str:
@@ -122,6 +132,10 @@ def check_repo(spec: str, run_cwd: str | None, entry_script: str | None, rep: Re
         return
     repo = real(parts[0])
     pkgs = [p.strip() for p in parts[1].split(",") if p.strip()]
+    bad = [p for p in pkgs if not valid_pkg(p)]
+    if bad:
+        rep.fail(f"invalid package name(s) {bad} -- must be plain (dotted) identifiers")
+        return
     own, extras = pkgs[0], pkgs[1:]
     python = real(parts[2]) if len(parts) == 3 else os.path.join(repo, ".venv", "bin", "python")
 

@@ -35,6 +35,12 @@ import sys
 SUSPECT_HINTS = ("_bak", "bak", "copy", "old", "holding", "backup", "tmp")
 
 
+def clean(s: str) -> str:
+    """Strip control characters (incl. ANSI escapes) from untrusted names before
+    printing -- directory and branch names are attacker-influenceable text."""
+    return "".join(c for c in s if c.isprintable())
+
+
 def run(args: list[str], cwd: str | None = None) -> str:
     r = subprocess.run(args, capture_output=True, text=True, cwd=cwd, timeout=60)
     return r.stdout.strip() if r.returncode == 0 else ""
@@ -128,10 +134,11 @@ def main() -> int:
     print(f"{'PATH':<{wpath}}  {'KIND':<8} {'CLASS':<11} {'BRANCH':<28} "
           f"{'HEAD':<9} {'DIRTY':<5} {'A/B':<7} LAST")
     for d in rows:
-        print(f"{d['path']:<{wpath}}  {d['kind']:<8} {d['cls']:<11} {d['branch']:<28} "
-              f"{d['head']:<9} {d['dirty']:<5} {d['ahead']}/{d['behind']:<5} {d['last_commit']}")
+        print(f"{clean(d['path']):<{wpath}}  {d['kind']:<8} {d['cls']:<11} "
+              f"{clean(d['branch']):<28} {clean(d['head']):<9} {d['dirty']:<5} "
+              f"{d['ahead']}/{d['behind']:<5} {clean(d['last_commit'])}")
     for p in not_git:
-        print(f"{p:<{wpath}}  {'dir':<8} {'NOT-GIT':<11} {'-':<28} {'-':<9} {'-':<5} {'-':<7} -")
+        print(f"{clean(p):<{wpath}}  {'dir':<8} {'NOT-GIT':<11} {'-':<28} {'-':<9} {'-':<5} {'-':<7} -")
 
     # Candidate cleanup commands -- PRINTED ONLY, never run.
     print("\n--- candidate cleanup commands (review each; nothing has been executed) ---")

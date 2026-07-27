@@ -74,10 +74,21 @@ Per affected repo:
 ### 4. Report and ask — never push, never PR, on your own
 
 When the sweep is done (or blocked), present: the tracking table, a per-repo diffstat, and any
-`needs-decision` rows. Then ask which repos to push — pushing and PR-opening are separate
-approvals per house rules, and a PR for a PSLmodels repo may warrant different framing than an
-EAPD-DRB one. If PRs are approved: per-repo PR text follows the playbook (what/why/tested), with
-Phase-2 items filed as follow-up issues, not folded in.
+`needs-decision` rows. Everything up to here — local branches and local commits — is preparation;
+nothing has left the machine. Then the gates, in order and each with its own explicit approval:
+
+1. **Ask which repos to push.** Never push all branches on one blanket "go ahead"; the user names
+   the repos (or explicitly approves the batch as a batch).
+2. **After pushes succeed, ask again before opening any PR** — pushing and PR-opening are never
+   one step. Show each PR's draft text first. A PR for a PSLmodels repo may warrant different
+   framing than an EAPD-DRB one.
+3. **Never merge anything**, ever — merges are the user's alone.
+
+Opening N PRs across a fleet is exactly the "expensive and expansive" action the family's
+approval gates exist for (`skills/og/README.md`): the skill's deliverable is the prepared
+branches, drafted PR texts, and the tracking table — not the outbound actions. If PRs are
+approved: per-repo PR text follows the playbook (what/why/tested), with Phase-2 items filed as
+follow-up issues, not folded in.
 
 ## Standing rules
 

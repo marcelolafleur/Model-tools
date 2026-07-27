@@ -40,10 +40,24 @@ REV_INSTRUMENTS = [
 ]
 
 
+class _RestrictedUnpickler(pickle.Unpickler):
+    """Unpickling is code execution; OG output pickles need only numpy + builtin
+    containers, so refuse everything else rather than trust the file."""
+
+    def find_class(self, module, name):
+        if module.split(".")[0] == "numpy":
+            return super().find_class(module, name)
+        raise pickle.UnpicklingError(
+            f"refusing to unpickle {module}.{name}: OUTPUT pickles should contain only "
+            "numpy objects. If this dir is trusted and genuinely needs more, extend "
+            "_RestrictedUnpickler deliberately."
+        )
+
+
 def load(d: str, which: str):
     path = os.path.join(d, which)
     with open(path, "rb") as f:
-        return pickle.load(f)
+        return _RestrictedUnpickler(f).load()
 
 
 def get(d: dict, key: str):
@@ -88,11 +102,9 @@ def main() -> int:
 
     start_year = a.start_year
     if start_year is None:
-        try:
-            mp = load(a.base, "model_params.pkl")
-            start_year = int(getattr(mp, "start_year", None) or mp["start_year"])
-        except Exception:
-            start_year = 0  # fall back to t-indexing
+        # model_params.pkl is an ogcore Specifications object, which the restricted
+        # unpickler (rightly) refuses -- pass --start-year for calendar labels.
+        start_year = 0  # t-indexing fallback
     years = [start_year + t for t in range(a.num_years)]
     ylab = [str(y) if start_year else f"t={y}" for y in years]
 

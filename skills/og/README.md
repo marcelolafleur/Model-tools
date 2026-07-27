@@ -19,6 +19,26 @@ skills below cross-reference its sections.
 | [`worktree-orchard`](worktree-orchard/SKILL.md) | Read-only inventory of checkouts/worktrees/backup dirs; merged vs diverged vs dirty; cleanup as printed commands only | `orchard.py` |
 | [`calibration-provenance`](calibration-provenance/SKILL.md) | Trace any parameter back through notebooks/CSVs to its authoritative source; record the chain | — |
 
+## Approval gates (binding on every skill in this family)
+
+No skill in this directory ever takes an expensive or outward-facing action on its own. The
+division of labor is: **skills propose, draft, and prepare; the user decides.** Concretely, a
+skill may edit files, commit locally, and produce drafts — and must stop and ask before:
+
+- **Pushing** to any remote, **creating** a PR, or **merging** anything (merges are always the
+  user's, never proposed-and-executed). Drafting the PR text and showing the diff is the skill's
+  job; the push and the PR are two separate approvals.
+- **Launching long computations** — a TPI solve, a battery, a full example run, anything more
+  than a couple of minutes. Propose the exact command, state the expected duration, let the user
+  launch. A passing preflight is a *precondition* for a run, never an *authorization* of one.
+- **Acting at fleet scale** — opening PRs (or pushing branches) across several repos is expensive
+  and expansive; it happens only after the user has seen the full tracking table and per-repo
+  diffs and has said which repos to act on. Never "one approval, N repos" unless the user
+  explicitly approves the batch as a batch.
+- **Deleting or destructive cleanup** — only ever emitted as commands for the user to run.
+
+If a skill's instructions ever seem to conflict with this section, this section wins.
+
 ## Installing
 
 Per the shelf policy (NOTES.md → curation policy): these live here versioned and uninstalled;

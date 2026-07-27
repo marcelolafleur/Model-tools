@@ -89,8 +89,10 @@ loud before launching: "running with N uncommitted changes in <repo>."
   assert catches a bad *re*-launch weeks later.
 - **Run as a user would**: the documented CLI from the checkout's own env. If the preflight only
   passes under some ad-hoc invocation, the environment is wrong, not the preflight.
-- **Confirm before launching**: SS solves are minutes, TPI/batteries are much longer and invisible
-  while running. Propose the run, let the user launch (house rule).
+- **A GO is a precondition, not an authorization.** This skill never launches the run itself.
+  SS solves are minutes; TPI runs and batteries are much longer and invisible while running.
+  After a GO, propose the exact launch command with its expected duration and wait for the
+  user's explicit call (house approval gate — see `skills/og/README.md`).
 - **Contamination heuristic (post-run, standing):** if a fresh run reproduces a number from a
   known-buggy earlier run, assume the wrong code ran. Stop, re-run the preflight, and never
   commit or bless those outputs.

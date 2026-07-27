@@ -88,3 +88,8 @@ silently, and the `{glue:text}` docs pattern for numbers quoted in prose — bot
 family practice (see og-country-calibration → Validation). If the trace ends at "no source
 found", the honest record is `PLACEHOLDER — undocumented, needs recalibration`, which is exactly
 the state og-country-calibration exists to fix.
+
+Scope of action: drafting the provenance record and committing it locally is this skill's job;
+pushing it or opening a PR against a country repo is the user's call, asked separately
+(`skills/og/README.md` → Approval gates). Never re-run a calibration or launch a solve to
+"re-verify" a chain — propose it.
