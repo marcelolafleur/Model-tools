@@ -202,3 +202,25 @@ Ranked by frequency × pain × how badly served:
   on branch `og-skills` under `skills/og/`.
 - 2026-07-27: Nate Herk skills — **pass** (see Stream 2); revisit only
   `token-dashboard` (tool).
+- 2026-07-27: **OG skill family BUILT** — six skills landed in `skills/og/` on
+  branch `og-skills` (Tier-3 items 1–6 of the shortlist): `og-run-preflight`
+  (+ `preflight.py`, tested GO on OG-PHL and NO-GO on a deliberately wrong cwd),
+  `og-solver-diagnosis` (superpowers systematic-debugging skeleton, credited,
+  + failure taxonomy mined from og-country-tests — which turned out to be
+  mostly *successful* validation runs, so the taxonomy blends observed classes
+  with the documented ZAF fiscal-runaway/oscillation modes), `og-repo-fleet-sync`
+  (PANDAS3 playbook generalized; detection sweep dry-run: all 7 repos already
+  clean, positive control via ZAF git history), `og-scenario-report`
+  (+ `scenario_report.py`, dry-run against OG-PHL-Example; survey confirmed the
+  de-facto standard is exactly `macro_table` + `plot_all` and the gaps are
+  input-param diagnostics, multi-reform tables, narrative), `worktree-orchard`
+  (+ read-only `orchard.py`; found OG-PHL's hidden `.claude/worktrees` worktree),
+  `calibration-provenance` (+ notebook map; two chains verified to the digit —
+  ZAF gamma live-API drift, r_gov re-centering arithmetic exact). Install policy:
+  shelf → project ring per `skills/og/README.md`. **Side-finding to act on:**
+  live UN bearer JWTs are hardcoded in cells of `test_pop_api.ipynb`,
+  `undata_test.ipynb`, `undata_test-ETH.ipynb`, and
+  `notebooks/usaid_testing/un_api_token.txt` is non-empty — rotate/scrub before
+  any sharing. Remaining Tier-3 backlog: `repo-brief-sync`, `un-report-chapter`,
+  `gedcom-pipeline`, `secret-sweep` (now more urgent given the JWT finding), and
+  the rest.
