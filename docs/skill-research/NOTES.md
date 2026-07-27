@@ -184,4 +184,21 @@ Ranked by frequency × pain × how badly served:
 
 ## Installed / decided
 
-(to be filled as we evaluate and install)
+- 2026-07-27: **fable-mode updated** — pulled origin/main revision (Opus 5
+  routing table, benchmark-grounded scores), installed to
+  `~/.claude/skills/fable-mode/`, verified identical.
+- 2026-07-27: **Curation policy adopted — three rings, not install-everything:**
+  1. *Global core* (`~/.claude/skills/`): cross-project skills only, cap ~15-20,
+     prune when a skill hasn't triggered in months.
+  2. *Project-scoped* (each repo's `.claude/skills/`): domain skills live where
+     they apply (OG skills → OG repos), so they load only in relevant sessions.
+  3. *The shelf* (this repo's `skills/`): the curated, versioned library —
+     collected and documented but NOT installed; install on demand per ring 1/2.
+  Rationale: every installed skill's description loads into every session
+  (trigger pollution + context cost), and skills run with full permissions
+  (vet before install). Model-tools is the adjustable curated list.
+- 2026-07-27: **OG skill family commissioned** — dedicated session prompt at
+  `docs/skill-research/OG-SKILLS-SESSION-PROMPT.md`; will build in a worktree
+  on branch `og-skills` under `skills/og/`.
+- 2026-07-27: Nate Herk skills — **pass** (see Stream 2); revisit only
+  `token-dashboard` (tool).
