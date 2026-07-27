@@ -14,7 +14,7 @@ Code (or reload the window) so it's picked up:
 For example, to install `og-country-calibration` for your own use:
 
 ```
-cp -r skills/og-country-calibration ~/.claude/skills/
+cp -r skills/og/og-country-calibration ~/.claude/skills/
 ```
 
 Claude discovers it by the `name` and `description` in the `SKILL.md`
@@ -38,14 +38,13 @@ directory into their configured Codex skills folder; skills that include
   consistency.
 - [`fable-mode`](fable-mode/SKILL.md): apply a disciplined evidence, execution,
   and verification loop.
-- [`og-country-calibration`](og-country-calibration/SKILL.md): calibrate or
-  refine an OG-Core country model.
+## The OG family
 
-## The OG workflow family
+[`og/`](og/README.md) holds all OG-Core skills as one family — one directory
+per skill, kept separate from the top-level CLEWS skills:
 
-[`og/`](og/README.md) holds the OG-Core workflow skills as a family — one
-directory per skill, kept separate from the top-level CLEWS skills:
-
+- [`og/og-country-calibration`](og/og-country-calibration/SKILL.md): calibrate
+  or refine an OG-Core country model — the family's calibration playbook.
 - [`og/og-run-preflight`](og/og-run-preflight/SKILL.md): GO/NO-GO preflight
   before any model run (branch+HEAD, import shadowing, per-worktree venvs).
 - [`og/og-solver-diagnosis`](og/og-solver-diagnosis/SKILL.md): root-cause

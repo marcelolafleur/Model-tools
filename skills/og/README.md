@@ -4,14 +4,15 @@ Workflow skills for the OG-Core country-model practice (OG-USA/PHL/ZAF/IDN/BRA/E
 ogclews-link), built 2026-07-27 from the needs survey in `docs/skill-research/NOTES.md`. Each was
 tested against the real repos/materials before committing (see the per-skill commit messages).
 
-The family's calibration playbook, [`og-country-calibration`](../og-country-calibration/SKILL.md),
-lives one level up (it predates this directory) and is the companion to all of these — several
-skills below cross-reference its sections.
+The family's calibration playbook, [`og-country-calibration`](og-country-calibration/SKILL.md),
+predates the rest and is the companion to all of them — several skills below cross-reference its
+sections by name.
 
 ## The skills
 
 | Skill | One line | Bundled script |
 |---|---|---|
+| [`og-country-calibration`](og-country-calibration/SKILL.md) | The calibration playbook: methods, pitfalls, and house rules for calibrating any OG-Core country model, single- or multi-industry | — |
 | [`og-run-preflight`](og-run-preflight/SKILL.md) | Mandatory GO/NO-GO before any model run: branch+HEAD, import-shadowing (3 vectors), per-worktree venvs | `preflight.py` |
 | [`og-solver-diagnosis`](og-solver-diagnosis/SKILL.md) | Root-cause protocol for non-convergent/suspicious SS & TPI solves, with the family's real failure taxonomy | — |
 | [`og-repo-fleet-sync`](og-repo-fleet-sync/SKILL.md) | One change → N country repos: playbook, detection sweep, tracking table, per-repo branches; never pushes unasked | — |
@@ -48,8 +49,9 @@ repos where they apply, not globally:
 
 ```bash
 # project-scoped (recommended): from this repo's root, into a country repo / ogclews-link
-cp -r skills/og/og-run-preflight    ~/Projects/OG-PHL/.claude/skills/
-cp -r skills/og/og-solver-diagnosis ~/Projects/OG-PHL/.claude/skills/
+cp -r skills/og/og-country-calibration ~/Projects/OG-PHL/.claude/skills/
+cp -r skills/og/og-run-preflight       ~/Projects/OG-PHL/.claude/skills/
+cp -r skills/og/og-solver-diagnosis    ~/Projects/OG-PHL/.claude/skills/
 
 # personal (all projects) — for the cross-project ones (worktree-orchard especially)
 cp -r skills/og/worktree-orchard        ~/.claude/skills/
