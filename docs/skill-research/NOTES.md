@@ -224,3 +224,14 @@ Ranked by frequency × pain × how badly served:
   any sharing. Remaining Tier-3 backlog: `repo-brief-sync`, `un-report-chapter`,
   `gedcom-pipeline`, `secret-sweep` (now more urgent given the JWT finding), and
   the rest.
+- 2026-07-27: **OG family split by audience** — Model-tools (general audience)
+  keeps `og-country-calibration`, `og-scenario-report`, `og-analysis-studio`
+  (the model-user journey); the five infrastructure skills (`og-run-preflight`,
+  `og-solver-diagnosis`, `og-repo-fleet-sync`, `worktree-orchard`,
+  `calibration-provenance`) are canonical in **MUIOGO-AI** `.claude/skills/`
+  (commit 33c1c28 on `clews-skills`), which carries the FULL 8-skill set (the
+  three general ones mirrored; canonical-home map + approval gates in its
+  skills README). Gates pointer in all SKILL.md files genericized to "the OG
+  family README" so copies work in both layouts. Overlap flagged in MUIOGO-AI:
+  planned `og-calibrate` ≈ og-country-calibration; parts of planned
+  `muiogo-visualize`/`muiogo-brief` ≈ og-analysis-studio.

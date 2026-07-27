@@ -1,25 +1,28 @@
-# skills/og/ — the OG-Core workflow family
+# skills/og/ — OG-Core skills for model users
 
-Workflow skills for the OG-Core country-model practice (OG-USA/PHL/ZAF/IDN/BRA/ETH/FJI and
-ogclews-link), built 2026-07-27 from the needs survey in `docs/skill-research/NOTES.md`. Each was
-tested against the real repos/materials before committing (see the per-skill commit messages).
+The general-audience OG-Core skills: calibrate a country model, turn a finished run into the
+standard deliverable, and explore/visualize/write up results on demand. Built 2026-07-27 from the
+needs survey in `docs/skill-research/NOTES.md`; each was tested against real repos and outputs
+before committing.
 
-The family's calibration playbook, [`og-country-calibration`](og-country-calibration/SKILL.md),
-predates the rest and is the companion to all of them — several skills below cross-reference its
-sections by name.
+**The full practitioner set lives in the MUIOGO-AI repo** (`.claude/skills/`): it carries these
+three *plus* the infrastructure skills for people who develop and maintain the models —
+`og-run-preflight` (GO/NO-GO before any run), `og-solver-diagnosis` (root-cause protocol for sick
+solves), `og-repo-fleet-sync` (one change across the country-repo fleet), `worktree-orchard`
+(checkout-sprawl inventory), and `calibration-provenance` (trace any parameter to its source).
+The three skills here are canonical in this repo and mirrored there; the five practitioner skills
+are canonical there.
 
 ## The skills
 
 | Skill | One line | Bundled script |
 |---|---|---|
 | [`og-country-calibration`](og-country-calibration/SKILL.md) | The calibration playbook: methods, pitfalls, and house rules for calibrating any OG-Core country model, single- or multi-industry | — |
-| [`og-run-preflight`](og-run-preflight/SKILL.md) | Mandatory GO/NO-GO before any model run: branch+HEAD, import-shadowing (3 vectors), per-worktree venvs | `preflight.py` |
-| [`og-solver-diagnosis`](og-solver-diagnosis/SKILL.md) | Root-cause protocol for non-convergent/suspicious SS & TPI solves, with the family's real failure taxonomy | — |
-| [`og-repo-fleet-sync`](og-repo-fleet-sync/SKILL.md) | One change → N country repos: playbook, detection sweep, tracking table, per-repo branches; never pushes unasked | — |
 | [`og-scenario-report`](og-scenario-report/SKILL.md) | OUTPUT_BASELINE/OUTPUT_REFORM → the standard charts+tables+narrative deliverable | `scenario_report.py` |
 | [`og-analysis-studio`](og-analysis-studio/SKILL.md) | On-demand scenario design, free-form exploration, bespoke code-generated visualization and write-ups (not bound to the house formats) | — |
-| [`worktree-orchard`](worktree-orchard/SKILL.md) | Read-only inventory of checkouts/worktrees/backup dirs; merged vs diverged vs dirty; cleanup as printed commands only | `orchard.py` |
-| [`calibration-provenance`](calibration-provenance/SKILL.md) | Trace any parameter back through notebooks/CSVs to its authoritative source; record the chain | — |
+
+Together they cover the model-user journey: calibrate → run (your call, see the gates) →
+standard report → bespoke analysis.
 
 ## Approval gates (binding on every skill in this family)
 
@@ -39,28 +42,23 @@ skill may edit files, commit locally, and produce drafts — and must stop and a
   explicitly approves the batch as a batch.
 - **Deleting or destructive cleanup** — only ever emitted as commands for the user to run.
 
-If a skill's instructions ever seem to conflict with this section, this section wins.
+If a skill's instructions ever seem to conflict with this section, this section wins. (Skills
+reference this as "the OG family README"; the same section ships with the MUIOGO-AI copy.)
 
 ## Installing
 
 Per the shelf policy (NOTES.md → curation policy): these live here versioned and uninstalled;
-install on demand. OG skills are domain-scoped, so prefer the **project ring** — install into the
-repos where they apply, not globally:
+install on demand, preferring the **project ring**:
 
 ```bash
-# project-scoped (recommended): from this repo's root, into a country repo / ogclews-link
+# project-scoped (recommended): from this repo's root, into a country repo
 cp -r skills/og/og-country-calibration ~/Projects/OG-PHL/.claude/skills/
-cp -r skills/og/og-run-preflight       ~/Projects/OG-PHL/.claude/skills/
-cp -r skills/og/og-solver-diagnosis    ~/Projects/OG-PHL/.claude/skills/
+cp -r skills/og/og-scenario-report     ~/Projects/OG-PHL/.claude/skills/
+cp -r skills/og/og-analysis-studio     ~/Projects/OG-PHL/.claude/skills/
 
-# personal (all projects) — for the cross-project ones (worktree-orchard especially)
-cp -r skills/og/worktree-orchard        ~/.claude/skills/
-cp -r skills/og/og-repo-fleet-sync      ~/.claude/skills/
-cp -r skills/og/og-run-preflight        ~/.claude/skills/
-cp -r skills/og/og-solver-diagnosis     ~/.claude/skills/
-cp -r skills/og/og-scenario-report      ~/.claude/skills/
-cp -r skills/og/calibration-provenance  ~/.claude/skills/
+# personal (all projects)
+cp -r skills/og/og-country-calibration ~/.claude/skills/
 ```
 
-Restart / reload Claude Code after copying. Bundled scripts are stdlib-or-numpy-only and run with
-the target repo's own venv where stated in each SKILL.md.
+Restart / reload Claude Code after copying. `scenario_report.py` is numpy-only and runs with the
+target repo's own venv as described in its SKILL.md.

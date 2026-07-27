@@ -40,25 +40,17 @@ directory into their configured Codex skills folder; skills that include
   and verification loop.
 ## The OG family
 
-[`og/`](og/README.md) holds all OG-Core skills as one family — one directory
-per skill, kept separate from the top-level CLEWS skills:
+[`og/`](og/README.md) holds the general-audience OG-Core skills — one
+directory per skill, kept separate from the top-level CLEWS skills:
 
 - [`og/og-country-calibration`](og/og-country-calibration/SKILL.md): calibrate
   or refine an OG-Core country model — the family's calibration playbook.
-- [`og/og-run-preflight`](og/og-run-preflight/SKILL.md): GO/NO-GO preflight
-  before any model run (branch+HEAD, import shadowing, per-worktree venvs).
-- [`og/og-solver-diagnosis`](og/og-solver-diagnosis/SKILL.md): root-cause
-  protocol for non-convergent or suspicious SS/TPI solves.
-- [`og/og-repo-fleet-sync`](og/og-repo-fleet-sync/SKILL.md): propagate one
-  change across the country-repo fleet, tracked.
 - [`og/og-scenario-report`](og/og-scenario-report/SKILL.md): baseline-vs-reform
   outputs → standard charts, tables, narrative.
 - [`og/og-analysis-studio`](og/og-analysis-studio/SKILL.md): on-demand scenario
   design, analytical exploration, bespoke visualization, and write-ups.
-- [`og/worktree-orchard`](og/worktree-orchard/SKILL.md): read-only inventory of
-  checkout/worktree sprawl with retirement candidates.
-- [`og/calibration-provenance`](og/calibration-provenance/SKILL.md): trace any
-  calibrated parameter back to its authoritative source.
 
-See [`og/README.md`](og/README.md) for install lines (project-scoped install
-into the country repos is the recommended ring).
+The practitioner/infrastructure OG skills (run preflight, solver diagnosis,
+fleet sync, worktree inventory, calibration provenance) live in the MUIOGO-AI
+repo's `.claude/skills/`, which carries the full set. See
+[`og/README.md`](og/README.md) for the split and install lines.

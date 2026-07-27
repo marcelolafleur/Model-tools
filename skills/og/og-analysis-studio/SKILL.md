@@ -58,8 +58,9 @@ Interrogate existing runs, inputs and outputs, in the repo's own venv:
 - Honesty rules travel with the numbers: model levels are not currency (`factor` converts,
   ratios don't need it); multi-industry consumption uses `p_tilde·C`; nominal sector shares are
   numeraire-distorted; "net exports" is a residual. State the caveat where the number appears.
-- If a result looks wrong, don't explain it away — check the run first (`og-solver-diagnosis`,
-  and the contamination heuristic in `og-run-preflight`).
+- If a result looks wrong, don't explain it away — check the run first (`og-solver-diagnosis`
+  and the contamination heuristic in `og-run-preflight`; both ship with MUIOGO-AI's
+  `.claude/skills/` practitioner set).
 
 ## Mode 3 — Visualization
 

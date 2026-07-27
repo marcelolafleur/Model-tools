@@ -73,7 +73,8 @@ when relevant, and only then:
   calibration dashboard. If not, you may be reading the wrong output dir — or an unconverged run.
 - Confirm the solve actually completed (`Time path iteration complete` in the log) and note any
   binding-guard warnings (`K_d has negative elements`) in the caveats; if the run itself looks
-  sick, switch to the `og-solver-diagnosis` skill before reporting numbers.
+  sick, switch to the `og-solver-diagnosis` skill (practitioner set — ships with MUIOGO-AI's
+  `.claude/skills/`) before reporting numbers.
 - This skill reads *finished* outputs. If an output dir is missing or stale, never quietly
   re-run the solve to fill the gap — a model run is a user-approved action (see
   the OG family README → Approval gates); report what's missing and propose the run instead.
