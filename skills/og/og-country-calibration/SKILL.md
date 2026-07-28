@@ -130,6 +130,7 @@ Method → pitfall → exemplar.
 
 | Sub-block | Method | Pitfall | Exemplar |
 |---|---|---|---|
+| `start_year` | **A calibration decision, not a default: the most recent year the calibration can OBSERVE, not a projection year.** Check which anchors are observations vs extrapolations under each candidate year — the initial debt ratio is the sharp test (it must equal the debt ratio at the START of the start year, i.e. end of the prior year), and levels observed in year X (remittances/GDP, interest actuals) are data for a year-X start but extrapolations for X+1. Changing it regenerates demographics (and everything demographics-derived) via the country's regeneration tool, and re-maps the fiscal glide to the program years | Inheriting a future start year from a sibling repo: PHL shipped start 2026 while its latest data was 2025 — the packaged initial_debt_ratio 0.60 was in fact the beginning-of-2025 value (a 2026 start needed ~0.62), and the 2025-observed remittance ratio was being treated as a 2026 extrapolation | PHL (caught by the user, moved 2026→2025) |
 | Debt | `initial_debt_ratio` is *measured* (national/IMF/QPSD series); `debt_ratio_ss` is a *policy anchor* (program target/stance), a separate parameter that shapes the whole SS | Leaving `debt_ratio_ss` inherited/undocumented; not checking whether a debt-ratio jump is a **valuation effect** (FX float revaluing external debt) vs. real deterioration | IDN, ETH |
 | `zeta_D` | Default: set = `initial_foreign_debt_ratio` (assume foreign share of *new* issuance = foreign share of *stock*) | Using the realized flow when it's a crisis-period **outlier** (donor surge, debt standstill) — use the DSA's projected medium-term flow instead | USA measures the flow directly; ETH uses the DSA projection |
 | `zeta_K` | It's a **marginal fill-share no dataset measures — calibrate it by the level it produces**: tune until the solved SS `K_f/K` matches the IIP foreign-capital share (2-3 SS solves bracket it; PHL sensitivity ≈ 0.4pp of `K_f/K` per 0.01 of `zeta_K`). The normalized Chinn-Ito index is the *prior* locating the plausible range, not the target. **Re-validate after ANY tax-side change** — tax recalibration moves domestic saving, which moves `K_f/K` at fixed `zeta_K` (PHL: honest taxes pushed 0.26→0.14; `zeta_K` 0.4→0.47 restored the 0.20 IIP anchor) | The **`zeta_K = 0.9` placeholder** ("implies high openness") — drives domestic capital `K_d = B − D_d` negative, binds `K_d ≥ 0`, and breaks the transition. Also: treating Chinn-Ito as the target and never solving for the level | Method: IDN, ETH; level-tuning executed on PHL. The 0.9 pitfall: IDN hit it and fixed it, PHL fixed it in #68 |
@@ -139,6 +140,7 @@ Method → pitfall → exemplar.
 | Remittances `alpha_RM_1`/`alpha_RM_T`, aid `alpha_FA` | Hand-set JSON values, **never fetched**. **Level:** use the *personal* (BPM6) remittance measure — the model's `RM` is household income from abroad — central banks often headline a GDP ratio only for the narrower *cash* (formal-channel) series, ~1pp of GDP lower; derive personal/GDP on one consistent denominator. **Path:** `alpha_RM_1 = alpha_RM_T` pins only the endpoints — `get_RM` compounds `(1+g_RM)/(e^{g_y}(1+g_n))`, so a flat RM/Y **requires `g_RM[t] = e^{g_y}(1+g_n[t-1]) − 1`, a time-varying path** (no scalar works when `g_n` moves; regenerate it with the demographics). `g_RM` is in model growth units — never the nominal-USD growth rate from a press release. The SS never reads `g_RM` (`RM_ss = alpha_RM_T·Y`), so a wrong path corrupts *only* the transition. **Distribution:** ogcore's default `eta_RM` is population-proportional; survey evidence (FIES-type) shows remittance value concentrated at the top. Build group shares as quintile mean income × remittance-share-of-income (equal-count quintiles ⇒ value share follows directly), map to the J groups by interpolating the cumulative distribution, spread per-capita over ages; note the current-vs-lifetime-income ranking caveat (overstates concentration) vs uniform-within-top-quintile (understates it). **Schema: `eta_RM` in the parameters JSON is (S,J)** — the (T+S,S,J) on a live Specifications object is internal tiling | A nominal growth rate in the `g_RM` slot: PHL shipped `g_RM = 0.03` (Dec-on-Dec USD growth) against a ~5.7% model-consistent denominator — RM/Y silently fell 35% below its calibrated share by t≈24, recovering only after t≈100, with nothing in the docs intending it. And the cash-measure trap: PHL's 0.072 came from a BSP headline that was the cash series (personal was 8.1%) | PHL (all three, fixed on `calib/remittances`); ETH (aid) |
 | Debt-elastic premium `r_gov_DY`/`r_gov_DY2` | The base wedge is a **country-agnostic** OLS inversion of Li-Magud-Werner (same numbers everywhere). Add the convex Schmitt-Grohé/Uribe term in **centered** form around `debt_ratio_ss`, expand, fold the constant into `r_gov_shift` → premium is **exactly zero at the SS target**, so it only prices transition overshoot: `r_gov_DY = -2·r_gov_DY2·D̄`, `r_gov_shift = base − r_gov_DY2·D̄²` | A live-refresh path that returns the *raw* LMW shift silently **de-centers** the premium and moves the SS — freeze it | IDN, ETH |
 | `initial_Kg_ratio` | Solve the model's own SS law of motion `K̄g/Ȳ = (1−φg)·αI / (e^{gy}(1+gn) − (1−δg))`; if the *measured* stock is far above sustainable (SOE-built boom), **start at the measured value and let it depreciate** | Inheriting the sibling-shipped `0.2` undocumented when `gamma_g > 0` (OG-Core's own default is `0.0`; PHL/ZAF/IDN/BRA all ship `0.2`, but only PHL has `gamma_g>0`, so elsewhere it's inert) | ETH only — replicate wherever `gamma_g > 0` |
+| Initial household wealth `initial_wealth_ratio` | **Diagnose first**: without the parameter (OG-Core pre-#1189, or left at the 0.0 default), the transition imposes the SS wealth profile rescaled so aggregate B(0) = B_ss. Compute the implied per-household scale `B_ss / get_B(b_sp1, p, "SS", True)` — it measures the demographic distance between the initial and stationary populations, and anything far from 1 hands every initial household a uniform windfall (young population) or confiscation (old), which short-horizon retirees rationally consume/absorb: the fingerprint is a violent year-1-or-2 aggregate consumption spike concentrated in ages 60+ across all j, an investment collapse, a tau_c revenue pulse, and a spurious debt paydown (or the mirror images). **Fix**: set `initial_wealth_ratio` (OG-Core #1189; wealth-to-GDP at t=0 — the anchor is STATIC within the solve because initial wealth is a predetermined state: rescaling households' initial wealth between outer-loop iterations, even damped, drives the initial cohorts into infeasible negative-consumption roots that satisfy the extended FOCs AND pass ogcore's constraint checker, which watches a different object — always read min household consumption from the pickle) from data: `(K/Y_PWT − public capital stock/Y_ICSD) × (1 − IIP foreign-owned share) + domestic-held share × D/Y`. Compute the PWT ratio from the raw current-PPP series pair (capital `CKSPPP…` over output `CGDPOS…` on FRED), never from memory — PHL moved 3.33 (2019) → 3.97 (2023). Cross-check against household-net-worth estimates (UBS databook class — expect them LOWER; they undercount EM real property) and expect initial < SS wealth ratio for a fast-growing EM (a converging-up economy). **Out-of-sample check + a tension to expect:** the initial-period foreign capital share K_f(0)/K(0) vs the IIP is untargeted and worth reporting — but where the model's K/Y overshoots the PWT (the family trait), measured household wealth and the measured foreign share CANNOT both be hit (the model fills its larger capital stock with foreign inflows). Keep the household-wealth anchor (it is the quantity the parameter IS) and document the foreign-share miss with its mechanical cause; hitting the IIP share instead would need initial wealth far above any measured household-claims construction (PHL: 4.3 vs 3.35). **Then re-tune the `alpha_G` glide under the new initial condition** — it was fit against the windfall-distorted revenue path | PHL scale factor was **1.625** (63% windfall): retirees consumed at 3–7x SS for years, C jumped 41% for one year, I_d → ~2% of long-run, debt paid down to 50% vs a 60% target — all invisible in reform-minus-baseline tables (both paths share the initial condition), so it survived every reform validation and surfaced only in level exercises. Note the model *forces* B(0) = K_d(0) + D_d(0), so the capital-side data construction IS the model-consistent measure — don't reach for household balance-sheet surveys first | PHL (diagnosis + fix, OG-Core #1188/#1189) |
 
 ## Capital share (gamma)
 
@@ -535,6 +537,47 @@ multisector JSON as a worked example without checking `input_output.py` has the 
 
 ## Validation — test the joint steady state
 
+### Transition-path validation against the fiscal program [PHL — net-new, replicate everywhere]
+
+The SS dashboard can't see timing. After the steady state validates, compare the **baseline TPI
+paths** of the fiscal variables against the country's own published program — the sharpest test of
+whether the calibration tracks *expected* reality:
+
+- **The comparison set** (model from `TPI_vars.pkl`, first ~10–15 years): primary balance
+  (`total_tax_revenue − total_primary_government_outlays`)/Y vs the treasury's actual primary
+  balance + the medium-term program's (deficit path less programmed interest); `D/Y` vs actual debt
+  ratios + the program's trajectory/targets; total revenue/Y vs the program's revenue effort **with
+  a stated concept bridge** (model revenue is general-government accrual + captured non-tax; NG cash
+  programs need a wedge — derive it from one overlap year of OECD-vs-treasury data and hold it
+  constant); `I_g/Y` vs the program's infrastructure path. Sources: the MTFF-class medium-term
+  fiscal framework (deficit/revenue/disbursement/infra paths), the budget document (interest
+  projections, to convert deficit→primary), treasury cash-operations reports (actuals).
+- **The alpha_G glide — put the transition on the government's consolidation schedule.** A flat
+  identity-value `alpha_G` makes the model consolidate *immediately* (pb jumps to pb* in year one,
+  typically years ahead of the actual plan), which pays debt far below target early (PHL: down to
+  ~48% vs a 58–61% program band) before the closure brings it back. Instead set `alpha_G` as a
+  declining path: `alpha_G(t) = SS_revenue_share − pb_program(t) − alpha_T − alpha_I(t)` for each
+  program year, **capped at the identity-consistent value from the year the program's primary
+  balance crosses the model's pb*** (don't chase extended-projection years tighter than pb* — that
+  re-introduces the undershoot). The SS is untouched (the closure ignores `alpha_G`); only the
+  transition's stance changes. Bonus validation: if the program's own consolidation converges to
+  pb* near the end of the program window, the steady state is literally where the government's plan
+  is headed — say so in the docs.
+- **A violent early-transition spike is a diagnosis, not a feature.** A one-to-two year consumption
+  / consumption-tax-revenue pulse at the start of the baseline is the fingerprint of the imposed
+  initial-wealth condition (see the `initial_wealth_ratio` row in the macro table) — check the
+  B_ss/B0 scale factor and fix it with the parameter BEFORE labeling anything benign. (An earlier
+  version of this skill advised documenting the spike as "transition dynamics"; that normalized a
+  fixable artifact.) The dynamics that legitimately remain after the fix: convergence from a
+  non-stationary initial age distribution and capital stock, and — under a fiscal glide — the
+  early-transition growth rate exceeding its long-run value, which erodes the debt ratio before the
+  arithmetic tightens. Never tune fiscal parameters against whatever residual is left.
+- **Deliverable:** a small multi-panel figure (debt ratio, primary balance, revenue, public
+  investment; model line vs actual dots vs program markers) committed to the docs images with a
+  caption naming every source, referenced from the macro chapter's validation section — and axis
+  limits that show the model's full path (clipping the divergence you're testing for defeats the
+  exercise).
+
 - **Build a steady-state validation dashboard [emerging: IDN, ETH — adopt it].** A table in `macro.md`
   comparing the solved SS to country data targets, each with a source column. Recurring moments: `D/Y`,
   `D_f/D`, `K_f/K`, `K_f/Y`, `C/Y`, `(I+I_g)/Y`, `K/Y`, `I_g/Y`, `TR/Y`, `NX/Y`, `RM/Y`, `r`, PIT/Y,
@@ -607,6 +650,29 @@ multisector JSON as a worked example without checking `input_output.py` has the 
   JSON + an overrides dict, solves SS-only, and prints model-vs-target by instrument. Always finish
   with a **standalone solve of the packaged JSON itself** (no overrides) — it catches schema errors
   and guess problems the overrides path hides.
+- **Run engineering: SS serial, TPI parallel with Anderson [PHL — adopt everywhere].** The dask
+  client's distribution overhead DOMINATES the SS solve (PHL: 12+ min through a 7-worker client vs
+  66s with `client=None`) while the TPI genuinely benefits from j-parallelism. And
+  `TPI_outer_method = "anderson"` (ogcore ≥0.16.4) cut the M=1 transition from ~30–70 damped
+  iterations (~20 min) to 11–12 (~2–2.5 min) with monotonically declining distances — put it in the
+  packaged JSON, not just the multi-industry overlay. Watch the distance series the first time: if
+  it oscillates or stalls, fall back to damped `nu`. `ogcore.execute.runner` always re-solves the
+  SS, so a two-phase driver (SS.run_SS with client=None → pickle → TPI.run_TPI with the client)
+  is the fast pattern.
+- **Verify BOTH tails of every path, and read the figure you just made [PHL — a caught error].** A
+  min-only check on the debt path ("trough = 60.0, stays on target") passed while the path actually
+  climbed to 74% — the check tested only the direction the PREVIOUS failure pointed. For every path
+  claim report min AND max with their years, and eyeball the plotted line before writing the
+  sentence about it.
+- **Running a country model against an unreleased ogcore branch [PHL].** `uv run --with-editable
+  <ogcore-checkout>` can silently resolve ogcore from the uv CACHE, and probing with `python -c`
+  from the checkout root masks it via cwd shadowing. The working pattern: run from the ogcore
+  checkout's env with the country repo overlaid (`cd OG-Core && uv run --with-editable ../OG-XXX
+  python driver.py`), pin `sys.path.insert(0, <ogcore-checkout>)` in the driver, and `assert
+  <checkout> in ogcore.__file__` before anything else — the assert has caught real contamination.
+  Keep the packaged JSON loadable on RELEASED ogcore too: tests that build a `Specifications`
+  strip not-yet-released parameters when absent (`hasattr` guard), so the suite stays green on
+  both.
 - **Initial-guess fragility: nearness ≠ solvability [PHL].** Guesses retuned to the *exact* solved
   values (factor to 5 digits) sent the solver through a `K_d < 0` region and failed the SS, while
   older, farther guesses converged cleanly. Choose packaged guesses by solve-path robustness — keep
@@ -635,6 +701,27 @@ multisector JSON as a worked example without checking `input_output.py` has the 
   fleet-scale are proposed and wait for the user's explicit call. Never merge.
 
 ### Preparing the calibration PR — what maintainers actually ask for [PHL #63 review, jdebacker]
+
+- **Register: the PR reports what was done; the docs carry the discussion.** State each change and
+  its anchor in a line or two ("unmodeled recurring revenue is carried by the nearest-equivalent
+  instruments: property-type taxes on the wealth tax, state-asset income on the CIT adjustment, fees
+  on `tau_c`") and point to the calibration chapter for the derivation, the alternatives, and the
+  caveats. Design-justification paragraphs ("worth review", "the honest carrier", why-not-X) belong
+  in the PR **only when explicitly asking the maintainers to decide something** — otherwise they
+  read as asking for a debate nobody requested. **[PHL #85 feedback]**
+- **Always include the goodness-of-fit table** — the standard close for any calibration PR: every
+  calibrated moment, `Model | Target | Source`, one row per anchor, revenue lines first, then the
+  external/fiscal anchors. Read the model column from the solved SS pickle, never from memory:
+
+  | Moment | Model | Target | Source |
+  |---|---|---|---|
+  | PIT/Y … each revenue instrument … | | | collections source (e.g. OECD RevStats) |
+  | total revenue/Y | | | |
+  | RM/Y, K_f/K, D/Y, D_f/D, r_gov | | | BSP/BTr-class anchors |
+
+  Follow it with the tested block (suite count, SS RC error, TPI RC error vs tolerance, debt-path
+  behavior vs target) and the reform percent-change table (Y/C/K/L/r/w by year + SS), the same
+  format across the family (see PHL #68/#85).
 
 - **Show the before/after of every calibrated object the PR changes — upfront, don't make them ask.**
   On PHL #63 the maintainer's first request was a *new-vs-old side-by-side of the `io_matrix`*. For each
