@@ -14,7 +14,7 @@ Code (or reload the window) so it's picked up:
 For example, to install `og-country-calibration` for your own use:
 
 ```
-cp -r skills/og-country-calibration ~/.claude/skills/
+cp -r skills/og/og-country-calibration ~/.claude/skills/
 ```
 
 Claude discovers it by the `name` and `description` in the `SKILL.md`
@@ -38,5 +38,19 @@ directory into their configured Codex skills folder; skills that include
   consistency.
 - [`fable-mode`](fable-mode/SKILL.md): apply a disciplined evidence, execution,
   and verification loop.
-- [`og-country-calibration`](og-country-calibration/SKILL.md): calibrate or
-  refine an OG-Core country model.
+## The OG family
+
+[`og/`](og/README.md) holds the general-audience OG-Core skills — one
+directory per skill, kept separate from the top-level CLEWS skills:
+
+- [`og/og-country-calibration`](og/og-country-calibration/SKILL.md): calibrate
+  or refine an OG-Core country model — the family's calibration playbook.
+- [`og/og-scenario-report`](og/og-scenario-report/SKILL.md): baseline-vs-reform
+  outputs → standard charts, tables, narrative.
+- [`og/og-analysis-studio`](og/og-analysis-studio/SKILL.md): on-demand scenario
+  design, analytical exploration, bespoke visualization, and write-ups.
+
+The practitioner/infrastructure OG skills (run preflight, solver diagnosis,
+fleet sync, worktree inventory, calibration provenance) live in the MUIOGO-AI
+repo's `.claude/skills/`, which carries the full set. See
+[`og/README.md`](og/README.md) for the split and install lines.
